@@ -59,7 +59,8 @@ public class ProductSearchService {
 
 		return documentId;
 	}
-
+    
+	//Native Query
 	public void findProductsByBrand(final String brandName) {
 		QueryBuilder queryBuilder = QueryBuilders
 				.matchQuery("manufacturer", brandName);

@@ -1,0 +1,24 @@
+{
+    
+    "index":{
+           "refresh_interval":"1s",
+           "store":{"type":"fs"},
+           "number_of_shards":"5",
+           "number_of_replicas":"2"
+           },
+    
+        "analysis":{
+            "analyzer":{
+                "my_custom_analyzer":{
+                    "type":"custom",
+                    "char_filter":["html_strip"],
+                    "tokenizer":"standard",
+                    "filter":[
+                        "lowercase",
+                        "stop",
+                        "asciifolding"
+                    ]
+                }
+            }
+        }
+}

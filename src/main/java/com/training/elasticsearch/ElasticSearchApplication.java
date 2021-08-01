@@ -17,6 +17,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 
+import com.training.elasticsearch.domain.Location;
 import com.training.elasticsearch.domain.Product;
 import com.training.elasticsearch.repository.ProductRepository;
 
@@ -63,8 +64,21 @@ public class ElasticSearchApplication {
 				if(lineNo == 1) continue;
 				Optional<Product> product = 
 						csvRowToProductMapper(line);
-				if(product.isPresent())
-				productList.add(product.get());
+				if(product.isPresent()) {
+					if(lineNo == 2) { 
+						List<Location> locations = new ArrayList<>();
+						Location loc = new Location();
+						loc.setCity("Delhi");
+						locations.add(loc);
+						loc = new Location();
+						loc.setCity("Mumbai");
+						locations.add(loc);
+						//location.add("Mumbai");
+						product.get().setLocations(locations);
+					}
+					productList.add(product.get());
+				}
+				
 			}
 		} catch (Exception e) {
 			log.error("File read error {}",e);
@@ -73,18 +87,26 @@ public class ElasticSearchApplication {
 	}
 
 	private Optional<Product> csvRowToProductMapper(final String line) {
+		
+		
 		try (			
+			
+				
 			Scanner rowScanner = new Scanner(line)) {
 			rowScanner.useDelimiter(COMMA_DELIMITER);
 			while (rowScanner.hasNext()) {
+				String id = rowScanner.next();
 				String name = rowScanner.next();
 				String description = rowScanner.next();
 				String manufacturer = rowScanner.next();
 				return Optional.of(
 						Product.builder()
+						.id(id)
 						.name(name)
 						.description(description)
 						.manufacturer(manufacturer)
+						.category(null)
+						//.version(2L)
 						.build());
 
 			}
